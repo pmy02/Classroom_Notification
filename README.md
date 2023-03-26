@@ -1,4 +1,4 @@
-[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fpmy02&count_bg=%2372F2F3&title_bg=%234B7CFF&icon=github.svg&icon_color=%23E7E7E7&title=VISIT&edge_flat=false)](https://github.com/pmy02/Classroom_Notification)
+[![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fpmy02&Classroom_Notification&count_bg=%2372F2F3&title_bg=%234B7CFF&icon=github.svg&icon_color=%23E7E7E7&title=VISIT&edge_flat=false)](https://github.com/pmy02/Classroom_Notification)
 
 # Classroom_Notification
 - 프로젝트명: 어디강의실 - 강의실 정보 알림이
