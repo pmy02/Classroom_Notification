@@ -1,6 +1,6 @@
 **English** | [한국어](README.ko.md)
 
-# 어디강의실 (Eodi-Ganguisil) — Classroom-Notifier Placement & Usage Analysis
+# 어디강의실 — Classroom-Notifier Placement & Usage Analysis
 
 A data-analysis project that decides **where to install classroom-finder notifier devices** on a large university campus, and forecasts **how heavily each device would be used** over time. It combines exploratory analysis of two years of course-timetable data with a Prophet time-series model fit on a synthetic device-usage dataset.
 
@@ -8,10 +8,6 @@ A data-analysis project that decides **where to install classroom-finder notifie
 ![pandas](https://img.shields.io/badge/pandas-2.x-150458)
 ![Prophet](https://img.shields.io/badge/forecasting-Prophet-1f77b4)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green)
-<!-- TODO: after pushing, enable the CI badge:
-![CI](https://github.com/pmy02/Classroom_Notification/actions/workflows/ci.yml/badge.svg) -->
-
-> Originally a one-week team project (Nov 2021) at Gyeongsang National University (GNU). This repository has since been refactored from standalone notebooks into a reproducible, tested Python pipeline; the analysis and conclusions are unchanged.
 
 ## Overview
 
@@ -127,14 +123,6 @@ print(busiest_slots(df, top_n=10))
 └── pyproject.toml
 ```
 
-## Reproducibility
-
-- **Python**: 3.9+ (CI runs 3.10).
-- **Dependencies**: see `requirements.txt` / `pyproject.toml`. Pin exact versions for a byte-stable environment.
-- **Data**: the timetable spreadsheets and a generated synthetic usage file are committed under `Data/`. Regenerate the synthetic file with `python scripts/generate_synthetic.py --seed 42`.
-- **Determinism**: the synthetic generator is fully seeded. The preprocessing refactor reproduces the original project's day/period table exactly (1,154 rows).
-- **Hardware**: CPU only; the full pipeline runs in well under a minute on a laptop (Prophet fitting dominates).
-
 ## Limitations
 
 - **Synthetic usage data.** No notifier device was physically deployed, so the forecasting results are illustrative, not empirical.
@@ -158,6 +146,5 @@ Released under the MIT License. See [LICENSE](LICENSE).
 
 ## Contact
 
-<!-- TODO: confirm/replace with your preferred contact details -->
 - GitHub: [@pmy02](https://github.com/pmy02)
-- Email: <!-- TODO: add academic email -->
+- Email: minyo0119@gmail.com
