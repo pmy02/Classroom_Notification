@@ -8,10 +8,6 @@
 ![pandas](https://img.shields.io/badge/pandas-2.x-150458)
 ![Prophet](https://img.shields.io/badge/forecasting-Prophet-1f77b4)
 ![License: MIT](https://img.shields.io/badge/License-MIT-green)
-<!-- TODO: 푸시 후 CI 배지 활성화:
-![CI](https://github.com/pmy02/Classroom_Notification/actions/workflows/ci.yml/badge.svg) -->
-
-> 본래 경상국립대학교(GNU)에서 진행한 1주일 팀 프로젝트(2021년 11월)입니다. 이후 개별 노트북을 재현 가능하고 테스트가 포함된 Python 파이프라인으로 리팩터링했으며, 분석 내용과 결론은 그대로입니다.
 
 ## 개요
 
@@ -127,14 +123,6 @@ print(busiest_slots(df, top_n=10))
 └── pyproject.toml
 ```
 
-## 재현
-
-- **Python**: 3.9 이상 (CI는 3.10).
-- **의존성**: `requirements.txt` / `pyproject.toml` 참고. 완전히 동일한 환경이 필요하면 버전을 고정하세요.
-- **데이터**: 시간표 스프레드시트와 생성된 가상 사용량 파일을 `Data/`에 포함. `python scripts/generate_synthetic.py --seed 42`로 재생성 가능.
-- **결정성**: 가상 데이터 생성기는 시드로 완전히 고정됩니다. 전처리 리팩터링은 원본 프로젝트의 요일/교시 표(1,154행)를 정확히 재현합니다.
-- **하드웨어**: CPU만으로 충분하며, 전체 파이프라인은 노트북에서 1분 이내(주로 Prophet 적합)에 실행됩니다.
-
 ## 한계
 
 - **가상 사용량 데이터.** 알림이 기기가 실제로 설치된 적이 없어 예측 결과는 시연용이며 실측이 아닙니다.
@@ -151,13 +139,12 @@ print(busiest_slots(df, top_n=10))
 
 MIT 라이선스로 배포됩니다. [LICENSE](LICENSE) 참고.
 
-## 감사의 글
+## 참고
 
 - 시계열 예측에 사용한 [Facebook Prophet](https://facebook.github.io/prophet/docs/).
 - 경상국립대학교 수업시간표 데이터(2020–2021).
 
 ## 연락처
 
-<!-- TODO: 선호하는 연락처로 확인/교체 -->
 - GitHub: [@pmy02](https://github.com/pmy02)
-- 이메일: <!-- TODO: 학교 이메일 추가 -->
+- 이메일: minyo0119@gmail.com
