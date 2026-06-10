@@ -1,17 +1,19 @@
-"""eodi_classroom — analysis pipeline for the "어디강의실" classroom-notifier project.
+.PHONY: install test lint pipeline clean
 
-The package turns raw university timetable spreadsheets into clean,
-analysis-ready tables, runs exploratory analysis to decide where notifier
-devices should be installed, and forecasts per-device usage with Prophet.
+install:
+	pip install -e ".[dev]"
 
-Submodules:
-    config      Shared paths, column names, and domain constants.
-    preprocess  Timetable cleaning: sheet merge, room/time split, day/period split.
-    eda         Frequency counts and the day x period demand heatmap.
-    synthetic   Seeded generator for the (synthetic) device-touch dataset.
-    forecast    Daily aggregation and Prophet time-series forecasting.
-"""
+test:
+	pytest -q
 
-__version__ = "0.2.0"
+lint:
+	ruff check .
 
-__all__ = ["config", "preprocess", "eda", "synthetic", "forecast"]
+# Full demo pipeline on the data shipped in the repo.
+pipeline:
+	python scripts/run_preprocess.py
+	python scripts/run_eda.py
+	python scripts/run_forecast.py
+
+clean:
+	rm -rf docs/*.png src/*.egg-info .pytest_cache __pycache__

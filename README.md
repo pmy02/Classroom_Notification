@@ -1,45 +1,163 @@
-# 어디강의실
-- 프로젝트 소개 : 강의실 정보 알림이
-- 프로젝트 기간 : 2021.11.25 ~ 2021.11.30
+**English** | [한국어](README.ko.md)
 
-![어디강의실 메인](https://user-images.githubusercontent.com/62882579/227795105-3e892fcf-2791-4ecc-9023-7dee8396efa3.png)
+# 어디강의실 (Eodi-Ganguisil) — Classroom-Notifier Placement & Usage Analysis
 
-# 프로젝트 설명
-경상국립대학교의 넓은 면적으로 신입생 분들이 강의실을 찾는 데 어려움을 겪고 있습니다. 각 수업의 건물과 강의실의 위치를 알려주는 기기인 “강의실 알림이"를 학생의 출입이 잦은 장소에 설치한다면 현재 재학생뿐만 아니라 외부인에게도 많은 도움이 될 것이라는 생각이 들어 “어디강의실"을 계획하게 되었습니다.
+A data-analysis project that decides **where to install classroom-finder notifier devices** on a large university campus, and forecasts **how heavily each device would be used** over time. It combines exploratory analysis of two years of course-timetable data with a Prophet time-series model fit on a synthetic device-usage dataset.
 
-본 프로젝트는 알림이 기기 설치가 필요한 장소를 파악하고, 설치 이후에 수업 시간대별로 기기 사용량의 변화를 분석하고, 이를 바탕으로 기기 사용량을 예측하는 프로젝트입니다. 또한, 이를 바탕으로 학생들의 학습 환경 개선을 위한 방안을 도출합니다.
+![Python](https://img.shields.io/badge/Python-3.9%2B-blue)
+![pandas](https://img.shields.io/badge/pandas-2.x-150458)
+![Prophet](https://img.shields.io/badge/forecasting-Prophet-1f77b4)
+![License: MIT](https://img.shields.io/badge/License-MIT-green)
+<!-- TODO: after pushing, enable the CI badge:
+![CI](https://github.com/pmy02/Classroom_Notification/actions/workflows/ci.yml/badge.svg) -->
 
+> Originally a one-week team project (Nov 2021) at Gyeongsang National University (GNU). This repository has since been refactored from standalone notebooks into a reproducible, tested Python pipeline; the analysis and conclusions are unchanged.
 
-# 데이터 분석
-- 사용한 데이터 : 2020 ~ 2021 수업시간표, 가상의 기기 사용량 데이터
-- 데이터 전처리 : 수업시간표에서 불필요한 정보를 제거하고, 결측치를 처리합니다.
-- 분석 도구 : Python의 pandas, numpy, matplotlib, seaborn, prophet 라이브러리를 사용합니다.
-- 시각화 : matplotlib, seaborn 라이브러리를 사용하여 기기 사용량의 변화를 시각화합니다. <br><br>
+## Overview
 
-![image](https://user-images.githubusercontent.com/62882579/230105045-fa615d4e-606e-4e05-8206-0e9412b7bad8.png)
-기존 수업 시간표는 PDF 파일 형식으로 되어 있어서 데이터 분석에 적합하지 않습니다.
-따라서, PDF 파일을 엑셀 파일로 변환하고, 불필요한 정보를 제거하며 결측치를 처리하였습니다. 
-이후, 하나의 열에 여러 정보가 포함되어 있는 경우, 이를 분리하여 각각의 열로 나누었습니다. <br><br>
+GNU's campus is large, and incoming students often struggle to locate the right building and classroom for a given course. The proposal is a set of **"어디강의실" notifier devices** — kiosks placed at high-traffic spots that show the building and room for each class. This project answers two practical questions for that proposal:
 
-![image](https://user-images.githubusercontent.com/62882579/230106069-8bd7b413-f24c-4f75-ad7d-cd5e422e7f34.png)
-EDA 과정을 통해 교양 수업이 대부분인 것을 파악하였습니다. 이에 교양 수업을 듣는 학생들이 많이 이용할 것으로 예상되는 교양학관에 알림이 기기를 설치하는 것이 우선시 되었습니다. 또한, 요일과 수업시간(교시) 간의 이용량을 시각적으로 파악하기 위해 히트맵을 생성하였습니다. <br>
-이를 통해 인파가 가장 많이 몰릴 시간대를 파악하여 이용률에 따라 운영을 조정할 수 있습니다. <br><br>
+1. **Placement** — which buildings and time slots concentrate the most teaching, and therefore the most foot traffic? This is answered from real 2020–2021 timetable data.
+2. **Usage forecasting** — once devices are installed, how would per-device usage trend, so operations can be planned ahead? Because no device was ever deployed, this is demonstrated on a **synthetic** usage dataset.
 
-![image](https://user-images.githubusercontent.com/62882579/230107016-9f67acf1-dbfa-4d91-89ac-2e6412629de7.png)
-알림이 설치 이후에는 기기 이용률을 예측하여, 보다 효율적인 시설 운영에 도움을 주는 데이터 활용 계획을 세웠습니다. 실제로는 알림이 기기를 설치할 수 없어 가상의 기기 사용량 데이터를 만들었고, 이를 기반으로 Prophet을 사용한 시계열 예측을 진행하였습니다.
+The placement analysis pointed to the General Education building (교양학관), where general-education courses — the bulk of the timetable — are concentrated.
 
-가상의 데이터를 분석했기 때문에 유의미한 결과는 아니지만, 추후 대비를 위한 데이터 분석의 일환으로 진행하였습니다
+## Key Features
 
+- **Timetable preprocessing** that merges a multi-sheet, PDF-derived export, cleans missing and undetermined-instructor rows, and splits a combined `time [room]` field into separate room, day, and period columns.
+- **Exploratory analysis** of lecture counts by classroom, professor, day, and period, plus a **day × period demand heatmap** that surfaces the busiest slots.
+- **A seeded synthetic-usage generator** so the device-touch dataset is fully reproducible.
+- **Prophet time-series forecasting** of daily per-device usage, with results returned on both the log and original scales.
+- Refactored into an **importable package with entry-point scripts, unit tests, and CI**.
 
-# 결과
-- 분석 결과 : 교양학관에 기기를 설치하는 것으로 결정하였습니다. 또한, prophet을 사용한 시계열 예측 결과, 사용량을 확인할 수 있었습니다.
-- 시각화 결과 : 강의를 요일별, 교시별로 시각화한 히트맵과 학생들의 기기 사용량을 예측한 결과를 제공합니다.
+## Method / Approach
 
+The pipeline runs in four stages:
 
-# 결론
-- 결론 및 인사이트 : 기기 사용량이 급격히 증가하는 시기를 미리 파악하여 학생들의 학습 환경을 개선하는 방안을 마련할 필요가 있습니다.
-- 한계점 : 본 프로젝트에서는 가상의 기기 사용량을 분석하였으므로 정확하지 않습니다. 또한, 데이터 양이 적어 정확한 예측을 할 수 없는 한계가 있습니다.
+1. **Preprocess** (`preprocess.py`) — merge timetable sheets → clean → split into one row per day-tagged class period.
+2. **EDA** (`eda.py`) — frequency counts and the day × period crosstab/heatmap to identify demand concentration.
+3. **Synthesize** (`synthetic.py`) — generate a reproducible device-touch log over a date window (the devices were never physically deployed).
+4. **Forecast** (`forecast.py`) — aggregate to a daily series per device, log-transform, fit Prophet, and project usage forward.
 
+<!-- TODO: add a pipeline diagram at docs/architecture.png and reference it here:
+![Architecture](docs/architecture.png) -->
 
-# 참고 문헌
-- 참고 문헌 : Facebook Prophet Documentation (https://facebook.github.io/prophet/docs/)
+## Demo / Results
+
+The placement decision is driven by the timetable EDA; the forecast demonstrates the operational pipeline on synthetic data.
+
+**Project concept**
+
+![어디강의실 main](https://user-images.githubusercontent.com/62882579/227795105-3e892fcf-2791-4ecc-9023-7dee8396efa3.png)
+
+**Timetable preprocessing** — the source timetable arrived as PDF, was converted to Excel, cleaned, and split into structured columns.
+
+![preprocessing](https://user-images.githubusercontent.com/62882579/230105045-fa615d4e-606e-4e05-8206-0e9412b7bad8.png)
+
+**Day × period demand heatmap** — general-education courses dominate, which motivated placing a device in the General Education building; the heatmap also highlights the peak-traffic time slots.
+
+![day-period heatmap](https://user-images.githubusercontent.com/62882579/230106069-8bd7b413-f24c-4f75-ad7d-cd5e422e7f34.png)
+
+**Usage forecast (synthetic data)** — Prophet projection of daily device touches.
+
+![forecast](https://user-images.githubusercontent.com/62882579/230107016-9f67acf1-dbfa-4d91-89ac-2e6412629de7.png)
+
+> The forecast above is fit on synthetic usage data and illustrates the pipeline, not a measured campus trend.
+
+## Installation
+
+```bash
+git clone https://github.com/pmy02/Classroom_Notification.git
+cd Classroom_Notification
+
+python -m venv .venv && source .venv/bin/activate   # optional
+pip install -e ".[dev]"          # installs the package + pytest/ruff
+```
+
+Prophet pulls in a C++/Stan toolchain via `cmdstanpy`; see the [Prophet install guide](https://facebook.github.io/prophet/docs/installation.html) if the build step fails on your platform.
+
+## Usage
+
+After installing in editable mode, run the pipeline on the data shipped in `Data/`:
+
+```bash
+# 1. Build the cleaned day/period timetable
+python scripts/run_preprocess.py
+
+# 2. Print the busiest slots and save the demand heatmap to docs/
+python scripts/run_eda.py
+
+# 3. (Re)generate the synthetic device-usage dataset, reproducibly
+python scripts/generate_synthetic.py --seed 42
+
+# 4. Forecast usage for one device and save the plot
+python scripts/run_forecast.py --device "교양학관-1층" --periods 30
+```
+
+Or use the package directly:
+
+```python
+from eodi_classroom.preprocess import build_timetable
+from eodi_classroom.eda import busiest_slots
+
+df = build_timetable("Data/2020 ~ 2021 수업시간표.xlsx")
+print(busiest_slots(df, top_n=10))
+```
+
+`make pipeline` runs steps 1, 2, and 4 in sequence; `make test` and `make lint` run the checks.
+
+## Project Structure
+
+```
+.
+├── src/eodi_classroom/     # importable package
+│   ├── config.py           # paths, column names, domain constants
+│   ├── preprocess.py       # timetable cleaning + day/period split
+│   ├── eda.py              # counts and the day × period heatmap
+│   ├── synthetic.py        # seeded device-touch generator
+│   └── forecast.py         # daily aggregation + Prophet forecasting
+├── scripts/                # CLI entry points (run_preprocess, run_eda, ...)
+├── tests/                  # unit + smoke tests (pytest)
+├── Data/                   # timetable + synthetic usage spreadsheets
+├── Classroom_EDA/          # original EDA notebooks
+├── Device_Usage/           # original usage/forecasting notebooks
+├── docs/                   # generated and manual figures
+├── .github/workflows/ci.yml
+├── requirements.txt
+└── pyproject.toml
+```
+
+## Reproducibility
+
+- **Python**: 3.9+ (CI runs 3.10).
+- **Dependencies**: see `requirements.txt` / `pyproject.toml`. Pin exact versions for a byte-stable environment.
+- **Data**: the timetable spreadsheets and a generated synthetic usage file are committed under `Data/`. Regenerate the synthetic file with `python scripts/generate_synthetic.py --seed 42`.
+- **Determinism**: the synthetic generator is fully seeded. The preprocessing refactor reproduces the original project's day/period table exactly (1,154 rows).
+- **Hardware**: CPU only; the full pipeline runs in well under a minute on a laptop (Prophet fitting dominates).
+
+## Limitations
+
+- **Synthetic usage data.** No notifier device was physically deployed, so the forecasting results are illustrative, not empirical.
+- **Small forecasting sample.** The synthetic series spans roughly one month per device, which is short for stable seasonal estimates.
+- **Faithful parsing quirk.** Timetable entries like `"월1, 2"` (Monday periods 1 and 2) keep only the day-tagged token, matching the original analysis; forward-filling the weekday onto bare period tokens is a known, deliberate-to-preserve limitation (see `preprocess.split_day_period`).
+
+## Roadmap
+
+- Forward-fill weekdays onto bare period tokens and quantify the effect on the heatmap.
+- Per-building/-floor forecasts with shared seasonality.
+- A small dashboard (e.g. Streamlit) over the EDA and forecast outputs.
+
+## License
+
+Released under the MIT License. See [LICENSE](LICENSE).
+
+## Acknowledgments
+
+- [Facebook Prophet](https://facebook.github.io/prophet/docs/) for time-series forecasting.
+- Course-timetable data from Gyeongsang National University (2020–2021).
+
+## Contact
+
+<!-- TODO: confirm/replace with your preferred contact details -->
+- GitHub: [@pmy02](https://github.com/pmy02)
+- Email: <!-- TODO: add academic email -->
